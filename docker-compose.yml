@@ -1,0 +1,12 @@
+version: "3"
+services:
+  php:
+    container_name: php
+    build:
+      dockerfile: docker/php/Dockerfile
+      context: .
+    volumes:
+      - .:/app
+    tty: true
+  mockserver:
+    image: mockserver/mockserver
