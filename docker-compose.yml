@@ -10,3 +10,5 @@ services:
     tty: true
   mockserver:
     image: mockserver/mockserver
+    ports:
+      - "1080:1080"
