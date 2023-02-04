@@ -11,7 +11,10 @@ help:  ## Display this help
 install: composer-install up  ## Install required software and initialize your local configuration
 
 up:  ## Start application containers and required services
-	@docker-compose up -d
+	@bash -c "export MOCKSERVER_LOG_LEVEL=WARN; docker-compose up -d"
+
+debug:  ## Start application containers and required services
+	@bash -c "export MOCKSERVER_LOG_LEVEL=INFO; docker-compose up -d"
 
 down:  ## Stop application containers and required services
 	@docker-compose down

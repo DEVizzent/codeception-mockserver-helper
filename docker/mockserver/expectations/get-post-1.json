@@ -1,0 +1,101 @@
+{
+  "id": "get-post-1",
+  "httpRequest": {
+    "method": "GET",
+    "path": "/posts/1",
+    "headers": {
+      "content-length": [
+        "0"
+      ],
+      "User-Agent": [
+        "GuzzleHttp/7"
+      ],
+      "Host": [
+        "jsonplaceholder.typicode.com"
+      ]
+    },
+    "keepAlive": true,
+    "secure": true,
+    "protocol": "HTTP_1_1",
+    "localAddress": "localhost/127.0.0.1:1080",
+    "remoteAddress": "127.0.0.1:35156"
+  },
+  "httpResponse": {
+    "statusCode": 200,
+    "reasonPhrase": "OK",
+    "headers": {
+      "alt-svc": [
+        "h3=\":443\"; ma=86400, h3-29=\":443\"; ma=86400"
+      ],
+      "X-Ratelimit-Reset": [
+        "1663541001"
+      ],
+      "X-Ratelimit-Remaining": [
+        "999"
+      ],
+      "X-Ratelimit-Limit": [
+        "1000"
+      ],
+      "X-Powered-By": [
+        "Express"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "Via": [
+        "1.1 vegur"
+      ],
+      "Vary": [
+        "Origin, Accept-Encoding"
+      ],
+      "Server-Timing": [
+        "cf-q-config;dur=3.999999989901e-06"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "Report-To": [
+        "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=8bXL92eq%2BaEEjrC7gOV1Q4BBYz%2F18b9cuz%2Bm59VP4iUzDEjH9G2uxRK%2BxKIr6xoYfxmrmTqybLrsyYpmEZVf0IzSMfA7XizRycbnUCkM67ezH0PH6jGfb5%2FEMv8NX%2F6AusKf%2FqhFab1HWvcD5ZrD\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+      ],
+      "Pragma": [
+        "no-cache"
+      ],
+      "NEL": [
+        "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+      ],
+      "Expires": [
+        "-1"
+      ],
+      "Etag": [
+        "W/\"124-yiKdLzqO5gfBrJFrcdJ8Yq0LGnU\""
+      ],
+      "Date": [
+        "Sat, 04 Feb 2023 07:40:35 GMT"
+      ],
+      "Content-Type": [
+        "application/json; charset=utf-8"
+      ],
+      "Cache-Control": [
+        "max-age=43200"
+      ],
+      "CF-RAY": [
+        "7941c252df112f93-MAD"
+      ],
+      "CF-Cache-Status": [
+        "HIT"
+      ],
+      "Age": [
+        "25601"
+      ],
+      "Access-Control-Allow-Credentials": [
+        "true"
+      ]
+    },
+    "body": {
+      "userId": 1,
+      "id": 1,
+      "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+      "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+    }
+  }
+}
