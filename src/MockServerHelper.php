@@ -36,4 +36,15 @@ class MockServerHelper extends Module
         $this->seeMockRequestWasCalled($expectationId, 0);
     }
 
+    public function resetMockServerLogs()
+    {
+        $request = new Request('PUT', '/mockserver/clear?type=log');
+        $response = $this->mockserverClient->sendRequest($request);
+        Assert::assertEquals(
+            200,
+            $response->getStatusCode(),
+            $response->getBody()->getContents()
+        );
+
+    }
 }
