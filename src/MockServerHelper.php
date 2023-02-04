@@ -31,4 +31,9 @@ class MockServerHelper extends Module
         );
     }
 
+    public function seeMockRequestWasNotCalled(string $expectationId): void
+    {
+        $this->seeMockRequestWasCalled($expectationId, 0);
+    }
+
 }
