@@ -16,11 +16,11 @@ class MockServerHelper extends Module
         $this->mockserverClient = new Client(['base_uri'  => 'http://mockserver:1080']);
     }
 
-    public function seeMockRequestWasCalled(string $expectationId, int $times = 1): void
+    public function seeMockRequestWasCalled(string $expectationId, ?int $times = null): void
     {
         $body = [
             'expectationId' => ['id' => $expectationId],
-            'times' => ['atLeast' => $times, 'atMost' => $times]
+            'times' => ['atLeast' => $times ?? 1, 'atMost' => $times ?? 1000]
         ];
         $request = new Request('PUT', '/mockserver/verify', [], json_encode($body));
         $response = $this->mockserverClient->sendRequest($request);
