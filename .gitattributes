@@ -1,0 +1,8 @@
+/docker export-ignore
+/test export-ignore
+/var export-ignore
+/docker-compose.yml export-ignore
+/.* export-ignore
+/Makefile export-ignore
+/phpunit.xml export-ignore
+/phpstan.* export-ignore
