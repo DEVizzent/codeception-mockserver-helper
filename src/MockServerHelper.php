@@ -2,6 +2,7 @@
 
 namespace DEVizzent\CodeceptionMockServerHelper;
 
+use Codeception\Lib\ModuleContainer;
 use Codeception\Module;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
@@ -11,18 +12,22 @@ class MockServerHelper extends Module
 {
     private Client $mockserverClient;
 
-    public function __construct()
+    /**
+     * @param array<string, string> $config
+     */
+    public function __construct(ModuleContainer $moduleContainer, ?array $config = null)
     {
+        parent::__construct($moduleContainer, $config);
         $this->mockserverClient = new Client(['base_uri'  => 'http://mockserver:1080']);
     }
-
     public function seeMockRequestWasCalled(string $expectationId, ?int $times = null): void
     {
-        $body = [
+        $body = json_encode([
             'expectationId' => ['id' => $expectationId],
             'times' => ['atLeast' => $times ?? 1, 'atMost' => $times ?? 1000]
-        ];
-        $request = new Request('PUT', '/mockserver/verify', [], json_encode($body));
+        ]);
+        Assert::assertNotFalse($body);
+        $request = new Request('PUT', '/mockserver/verify', [], $body);
         $response = $this->mockserverClient->sendRequest($request);
         Assert::assertEquals(
             202,
@@ -36,7 +41,7 @@ class MockServerHelper extends Module
         $this->seeMockRequestWasCalled($expectationId, 0);
     }
 
-    public function resetMockServerLogs()
+    public function resetMockServerLogs(): void
     {
         $request = new Request('PUT', '/mockserver/clear?type=log');
         $response = $this->mockserverClient->sendRequest($request);

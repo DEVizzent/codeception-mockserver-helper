@@ -19,9 +19,6 @@ debug:  ## Start application containers and required services
 down:  ## Stop application containers and required services
 	@docker-compose down
 
-console:  ## Execute php container console
-	@docker exec -it ${PHP_CONTAINER_NAME} bash
-
 test:  ## Execute all phpunit test
 	@docker-compose exec ${PHP_CONTAINER_NAME} ./vendor/bin/phpunit
 
