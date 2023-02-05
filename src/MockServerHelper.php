@@ -2,24 +2,43 @@
 
 namespace DEVizzent\CodeceptionMockServerHelper;
 
-use Codeception\Lib\ModuleContainer;
 use Codeception\Module;
+use Codeception\TestInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\Assert;
 
 class MockServerHelper extends Module
 {
+    protected array $config = [
+        'url'          => 'http://mockserver:1080',
+        'cleanupBefore' => 'test'
+    ];
+
     private Client $mockserverClient;
 
     /**
      * @param array<string, string> $config
      */
-    public function __construct(ModuleContainer $moduleContainer, ?array $config = null)
+    public function _initialize()
     {
-        parent::__construct($moduleContainer, $config);
-        $this->mockserverClient = new Client(['base_uri'  => 'http://mockserver:1080']);
+        $this->mockserverClient = new Client(['base_uri'  => $this->config['url']]);
     }
+
+    public function _beforeSuite(array $settings = [])
+    {
+        if ('suite' === $this->config['cleanupBefore']) {
+            $this->clearMockServerLogs();
+        }
+    }
+
+    public function _before(TestInterface $test)
+    {
+        if ('test' === $this->config['cleanupBefore']) {
+            $this->clearMockServerLogs();
+        }
+    }
+
     public function seeMockRequestWasCalled(string $expectationId, ?int $times = null): void
     {
         $body = json_encode([
@@ -41,7 +60,7 @@ class MockServerHelper extends Module
         $this->seeMockRequestWasCalled($expectationId, 0);
     }
 
-    public function resetMockServerLogs(): void
+    public function clearMockServerLogs(): void
     {
         $request = new Request('PUT', '/mockserver/clear?type=log');
         $response = $this->mockserverClient->sendRequest($request);

@@ -2,6 +2,7 @@
 
 namespace Integration;
 
+use Codeception\Lib\ModuleContainer;
 use DEVizzent\CodeceptionMockServerHelper\MockServerHelper;
 use GuzzleHttp\Client;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -15,9 +16,11 @@ class SeeMockRequestWasCalledTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->sot = new MockServerHelper();
+        $moduleContainer = $this->createMock(ModuleContainer::class);
+        $this->sot = new MockServerHelper($moduleContainer);
+        $this->sot->_initialize();
         $this->client = new Client(['proxy' => 'http://mockserver:1080', 'verify' => false]);
-        $this->sot->resetMockServerLogs();
+        $this->sot->clearMockServerLogs();
     }
 
     public function testExpectationWasCalled(): void

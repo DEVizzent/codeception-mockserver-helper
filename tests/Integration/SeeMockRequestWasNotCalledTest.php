@@ -2,6 +2,7 @@
 
 namespace Integration;
 
+use Codeception\Lib\ModuleContainer;
 use DEVizzent\CodeceptionMockServerHelper\MockServerHelper;
 use GuzzleHttp\Client;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -15,12 +16,25 @@ class SeeMockRequestWasNotCalledTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->sot = new MockServerHelper();
+        $moduleContainer = $this->createMock(ModuleContainer::class);
+        $this->sot = new MockServerHelper($moduleContainer);
+        $this->sot->_initialize();
         $this->client = new Client(['proxy' => 'http://mockserver:1080', 'verify' => false]);
+        $this->sot->clearMockServerLogs();
     }
 
     public function testExpectationWasNotCalled(): void
     {
+        $this->sot->seeMockRequestWasNotCalled('get-post-2');
+    }
+
+    public function testExpectationWasNotCalledButItWasThrowException(): void
+    {$this->expectException(ExpectationFailedException::class);
+        $this->expectExceptionMessageMatches(
+            '#^Request not found exactly 0 times, expected:((.|\n)*) but was:((.|\n)*)'
+            . 'Failed asserting that 406 matches expected 202\.$#'
+        );
+        $this->client->request('GET', 'https://jsonplaceholder.typicode.com/posts/2');
         $this->sot->seeMockRequestWasNotCalled('get-post-2');
     }
 
