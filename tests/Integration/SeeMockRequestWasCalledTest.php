@@ -1,6 +1,6 @@
 <?php
 
-namespace Integration;
+namespace Test\DEVizzent\CodeceptionMockServerHelper\Integration;
 
 use Codeception\Lib\ModuleContainer;
 use DEVizzent\CodeceptionMockServerHelper\MockServerHelper;

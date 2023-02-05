@@ -8,6 +8,11 @@
       "DEVizzent\\CodeceptionMockServerHelper\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Test\\DEVizzent\\CodeceptionMockServerHelper\\": "tests/"
+    }
+  },
   "authors": [
     {
       "name": "Vicent Valls",
