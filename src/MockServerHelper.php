@@ -10,6 +10,10 @@ use PHPUnit\Framework\Assert;
 
 class MockServerHelper extends Module
 {
+
+    /**
+     * @var array<string, string> $config
+     */
     protected array $config = [
         'url'          => 'http://mockserver:1080',
         'cleanupBefore' => 'test'
@@ -17,22 +21,20 @@ class MockServerHelper extends Module
 
     private Client $mockserverClient;
 
-    /**
-     * @param array<string, string> $config
-     */
-    public function _initialize()
+
+    public function _initialize(): void
     {
         $this->mockserverClient = new Client(['base_uri'  => $this->config['url']]);
     }
 
-    public function _beforeSuite(array $settings = [])
+    public function _beforeSuite(array $settings = []): void
     {
         if ('suite' === $this->config['cleanupBefore']) {
             $this->clearMockServerLogs();
         }
     }
 
-    public function _before(TestInterface $test)
+    public function _before(TestInterface $test):void
     {
         if ('test' === $this->config['cleanupBefore']) {
             $this->clearMockServerLogs();
