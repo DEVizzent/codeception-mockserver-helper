@@ -29,7 +29,8 @@ class SeeMockRequestWasNotCalledTest extends TestCase
     }
 
     public function testExpectationWasNotCalledButItWasThrowException(): void
-    {$this->expectException(ExpectationFailedException::class);
+    {
+        $this->expectException(ExpectationFailedException::class);
         $this->expectExceptionMessageMatches(
             '#^Request not found exactly 0 times, expected:((.|\n)*) but was:((.|\n)*)'
             . 'Failed asserting that 406 matches expected 202\.$#'
@@ -38,7 +39,7 @@ class SeeMockRequestWasNotCalledTest extends TestCase
         $this->sot->seeMockRequestWasNotCalled('get-post-2');
     }
 
-    public function testExpectationWasCalledThrowException(): void
+    public function testExpectationWasCalledNotExistExpectationThrowException(): void
     {
         $this->expectException(ExpectationFailedException::class);
         $this->expectExceptionMessage(

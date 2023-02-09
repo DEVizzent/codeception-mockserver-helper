@@ -1,0 +1,12 @@
+{
+  "id": "not-matched-request",
+  "priority": -100,
+  "httpRequest": {},
+  "httpResponse": {
+    "statusCode": 500,
+    "reasonPhrase": "Internal Server Error",
+    "body": {
+      "message": "Request not matched by MockServer"
+    }
+  }
+}
