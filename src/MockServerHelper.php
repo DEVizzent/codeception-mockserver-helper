@@ -2,6 +2,7 @@
 
 namespace DEVizzent\CodeceptionMockServerHelper;
 
+use Codeception\Lib\ModuleContainer;
 use Codeception\Module;
 use Codeception\TestInterface;
 use GuzzleHttp\Client;
@@ -10,21 +11,20 @@ use PHPUnit\Framework\Assert;
 
 class MockServerHelper extends Module
 {
-
-    /**
-     * @var array<string, string> $config
-     */
-    protected array $config = [
-        'url'          => 'http://mockserver:1080',
-        'cleanupBefore' => 'test'
-    ];
-
     private Client $mockserverClient;
+    public function __construct(ModuleContainer $moduleContainer, ?array $config = null)
+    {
+        $this->requiredFields = ['url'];
+        $this->config['cleanupBefore'] = 'test';
+        parent::__construct($moduleContainer, $config);
+    }
 
 
     public function _initialize(): void
     {
-        $this->mockserverClient = new Client(['base_uri'  => $this->config['url']]);
+        $this->mockserverClient = new Client([
+            'base_uri'  => $this->config['url']
+        ]);
     }
 
     public function _beforeSuite(array $settings = []): void

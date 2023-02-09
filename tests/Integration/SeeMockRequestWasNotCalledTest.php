@@ -17,7 +17,7 @@ class SeeMockRequestWasNotCalledTest extends TestCase
     {
         parent::setUp();
         $moduleContainer = $this->createMock(ModuleContainer::class);
-        $this->sot = new MockServerHelper($moduleContainer);
+        $this->sot = new MockServerHelper($moduleContainer, ['url' => 'http://mockserver:1080']);
         $this->sot->_initialize();
         $this->client = new Client(['proxy' => 'http://mockserver:1080', 'verify' => false]);
         $this->sot->clearMockServerLogs();
