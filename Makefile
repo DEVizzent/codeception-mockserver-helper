@@ -13,7 +13,7 @@ install: composer-install up  ## Install required software and initialize your l
 up:  ## Start application containers and required services
 	@bash -c "export MOCKSERVER_LOG_LEVEL=WARN; docker-compose up -d"
 
-debug:  ## Start application containers and required services
+debug:  ## Start application containers and required services in debug mode
 	@bash -c "export MOCKSERVER_LOG_LEVEL=INFO; docker-compose up -d"
 
 down:  ## Stop application containers and required services
@@ -32,7 +32,7 @@ code-find-bugs phpstan:  ## Run static analysis tool to find possible bugs using
 	@docker-compose exec ${PHP_CONTAINER_NAME} ./vendor/bin/phpstan analyse
 
 code-find-smells md:  ## Run static analysis tool to find code smells using mess detector
-	@docker-compose exec ${PHP_CONTAINER_NAME} ./vendor/bin/phpmd src,tests text phpmd.xml --suffixes php --exclude src/Infrastructure/Persistence/Doctrine/Migrations,tests/_support,tests/acceptance
+	@docker-compose exec ${PHP_CONTAINER_NAME} ./vendor/bin/phpmd src,tests text phpmd.xml --suffixes php
 
 composer-update:  ## Run composer update
 	@docker run --rm --interactive --tty --volume $PWD:/app composer update
