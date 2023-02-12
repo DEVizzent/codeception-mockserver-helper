@@ -36,7 +36,7 @@ class NotMatchedRequestTest extends TestCase
     public function testActivateNotMatchedRequestCreateExpectation()
     {
         $this->initialize(NotMatchedRequest::ENABLED);
-        $this->sot->seeMockRequestWasNotCalled('not-matched-request');
+        $this->sot->seeMockRequestWasNotCalled(MockServerHelper::NOT_MATCHED_REQUEST_ID);
     }
 
     public function testActivateNotMatchedRequestWasCreatedAndDeactivated()
@@ -44,6 +44,6 @@ class NotMatchedRequestTest extends TestCase
         $this->initialize(NotMatchedRequest::ENABLED);
         $this->sot->deactivateNotMatchedRequest();
         $this->client->request('GET', self::NOT_MATCHED_URI, ['http_errors' => false]);
-        $this->sot->seeMockRequestWasNotCalled('not-matched-request');
+        $this->sot->seeMockRequestWasNotCalled(MockServerHelper::NOT_MATCHED_REQUEST_ID);
     }
 }
