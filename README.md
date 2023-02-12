@@ -7,8 +7,16 @@ the request you have sent to mock server and manage the expectations of mockserv
 
 ## How to use it
 
-#### WIP
-Write some code examples.
+```php
+//You can create expectations before call your application in a test
+$I->createMockRequest('{"id": "elastic-get-entity-1", "httpRequest": {...}, "httpResponse": {...}}')
+$I->createMockRequest('{"id": "elastic-get-entity-2", "httpRequest": {...}, "httpResponse": {...}}')
+$I->sendGet('/applition/endpoint/1');
+//After execute our application we can check our mocked HTTP communication
+$I->seeMockRequestWasCalled('elastic-get-entity-1');
+$I->seeMockRequestWasNotCalled('elastic-get-entity-2');
+$I->seeAllRequestWereMatched();
+```
 
 ## Installation
 
