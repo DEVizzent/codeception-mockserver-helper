@@ -10,6 +10,7 @@ use DEVizzent\CodeceptionMockServerHelper\Config\NotMatchedRequest;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\ExpectationFailedException;
 
 class MockServerHelper extends Module
 {
@@ -84,6 +85,21 @@ class MockServerHelper extends Module
     public function seeMockRequestWasNotCalled(string $expectationId): void
     {
         $this->seeMockRequestWasCalled($expectationId, 0);
+    }
+
+    public function seeAllRequestWereMatched(): void
+    {
+        if (!$this->notMatchedRequest->isEnabled()) {
+            throw new ExpectationFailedException(
+                '\'seeAllRequestWereMatched\' can\'t be used without enable notMatchedRequest in config.'
+            );
+        }
+        try {
+            $this->seeMockRequestWasCalled(self::NOT_MATCHED_REQUEST_ID, 0);
+        } catch (ExpectationFailedException $exception) {
+            $message = 'REQUEST NOT MATCHED' . strstr($exception->getMessage(), ' was:');
+            throw new ExpectationFailedException($message);
+        }
     }
 
     public function createMockRequest(string $json): void
