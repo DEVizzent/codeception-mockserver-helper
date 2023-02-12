@@ -1,8 +1,8 @@
 {
   "name": "devizzent/codeception-mockserver-helper",
   "description": "Codeception helper to manage and verify MockServer expectations",
-  "type": "dev",
-  "license": "library",
+  "type": "library",
+  "license": "MIT",
   "autoload": {
     "psr-4": {
       "DEVizzent\\CodeceptionMockServerHelper\\": "src/"
