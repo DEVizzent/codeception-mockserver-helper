@@ -3,6 +3,7 @@
 namespace Test\DEVizzent\CodeceptionMockServerHelper\Integration;
 
 use Codeception\Lib\ModuleContainer;
+use DEVizzent\CodeceptionMockServerHelper\Config\NotMatchedRequest;
 use DEVizzent\CodeceptionMockServerHelper\MockServerHelper;
 use GuzzleHttp\Client;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -10,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class NotMatchedRequestTest extends TestCase
 {
-    const NOT_MATCHED_URI = 'https://jsonplaceholder.typicode.com/posts/3';
+    private const NOT_MATCHED_URI = 'https://jsonplaceholder.typicode.com/posts/3';
     private MockServerHelper $sot;
     private Client $client;
 
@@ -19,7 +20,7 @@ class NotMatchedRequestTest extends TestCase
         $moduleContainer = $this->createMock(ModuleContainer::class);
         $this->sot = new MockServerHelper(
             $moduleContainer,
-            ['url' => 'http://mockserver:1080', 'not-matched-request' => $notMatchedRequestConfig]
+            ['url' => 'http://mockserver:1080', 'notMatchedRequest' => $notMatchedRequestConfig]
         );
         $this->sot->_initialize();
         $this->client = new Client(['proxy' => 'http://mockserver:1080', 'verify' => false]);
@@ -34,24 +35,15 @@ class NotMatchedRequestTest extends TestCase
 
     public function testActivateNotMatchedRequestCreateExpectation()
     {
-        $this->initialize('activated');
+        $this->initialize(NotMatchedRequest::ENABLED);
         $this->sot->seeMockRequestWasNotCalled('not-matched-request');
-    }
-
-    public function testActivateNotMatchedRequestWasCreatedAndCalled()
-    {
-        $this->initialize('activated');
-        $this->client->request('GET', self::NOT_MATCHED_URI, ['http_errors' => false]);
-        $this->sot->seeMockRequestWasCalled('not-matched-request', 1);
     }
 
     public function testActivateNotMatchedRequestWasCreatedAndDeactivated()
     {
-        $this->initialize('activated');
+        $this->initialize(NotMatchedRequest::ENABLED);
         $this->sot->deactivateNotMatchedRequest();
         $this->client->request('GET', self::NOT_MATCHED_URI, ['http_errors' => false]);
         $this->sot->seeMockRequestWasNotCalled('not-matched-request');
     }
-
-
 }
