@@ -6,3 +6,5 @@
 /Makefile export-ignore
 /phpunit.xml export-ignore
 /phpstan.* export-ignore
+/phpcs.xml export-ignore
+/phpmd.xml export-ignore
