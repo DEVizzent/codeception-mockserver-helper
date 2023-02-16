@@ -47,10 +47,12 @@ class MockServerHelper extends Module
             $expectationJson = file_get_contents(__DIR__ . '/not-matched-request.json');
             Assert::assertIsString($expectationJson);
             $this->createMockRequest($expectationJson);
+        } else {
+            $this->deactivateNotMatchedRequest();
         }
     }
 
-    public function _beforeSuite(array $settings = []): void
+    public function _beforeSuite($settings = []): void
     {
         parent::_beforeSuite($settings);
         if ($this->cleanUpBefore->isSuite()) {
