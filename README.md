@@ -27,7 +27,10 @@ $ composer require devizzent/codeception-mockserver-helper --dev
 ```
 
 ## Codeception Configuration
-Go to your codeception configuration and add this module
+`This helper isn't a codeception module, it  can't be configured in the global codeception.yml 
+ only in the *.suite.yml configuration.`
+
+Go to your codeception **suite** configuration and add this module
 ```yaml
 modules:
   enabled:
