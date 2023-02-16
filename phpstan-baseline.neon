@@ -1,6 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Method DEVizzent\\\\CodeceptionMockServerHelper\\\\MockServerHelper::_beforeSuite\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			message: "#^Method DEVizzent\\\\CodeceptionMockServerHelper\\\\MockServerHelper\\:\\:\\_beforeSuite\\(\\) has parameter \\$settings with no type specified\\.$#"
 			count: 1
 			path: src/MockServerHelper.php
