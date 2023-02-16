@@ -120,6 +120,21 @@ class MockServerHelper extends Module
         );
     }
 
+    public function removeMockRequest(string $mockRequestId): void
+    {
+        $body = json_encode([
+            'id' => $mockRequestId
+        ]);
+        Assert::assertIsString($body);
+        $request = new Request('PUT', '/mockserver/clear?type=expectations', [], $body);
+        $response = $this->mockserverClient->sendRequest($request);
+        Assert::assertEquals(
+            200,
+            $response->getStatusCode(),
+            $response->getBody()->getContents()
+        );
+    }
+
     public function clearMockServerLogs(): void
     {
         $request = new Request('PUT', '/mockserver/clear?type=log');
@@ -133,16 +148,6 @@ class MockServerHelper extends Module
 
     public function deactivateNotMatchedRequest(): void
     {
-        $body = json_encode([
-            'id' => self::NOT_MATCHED_REQUEST_ID
-        ]);
-        Assert::assertIsString($body);
-        $request = new Request('PUT', '/mockserver/clear?type=expectations', [], $body);
-        $response = $this->mockserverClient->sendRequest($request);
-        Assert::assertEquals(
-            200,
-            $response->getStatusCode(),
-            $response->getBody()->getContents()
-        );
+        $this->removeMockRequest(self::NOT_MATCHED_REQUEST_ID);
     }
 }
