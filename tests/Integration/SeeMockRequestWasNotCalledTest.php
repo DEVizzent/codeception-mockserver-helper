@@ -17,14 +17,14 @@ class SeeMockRequestWasNotCalledTest extends TestCase
     {
         parent::setUp();
         $config = [
-            'url' => 'http://mockserver:1080',
+            'url' => getenv('MOCKSERVER_URL'),
             'expectationsPath' => __DIR__ . '/../../docker/mockserver/expectations',
         ];
         $moduleContainer = $this->createMock(ModuleContainer::class);
         $this->sot = new MockServerHelper($moduleContainer, $config);
         $this->sot->_initialize();
         $this->sot->_beforeSuite();
-        $this->client = new Client(['proxy' => 'http://mockserver:1080', 'verify' => false]);
+        $this->client = new Client(['proxy' => getenv('MOCKSERVER_URL'), 'verify' => false]);
         $this->sot->clearMockServerLogs();
     }
 
