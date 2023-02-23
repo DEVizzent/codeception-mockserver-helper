@@ -11,11 +11,14 @@ the request you have sent to mock server and manage the expectations of mockserv
 //You can create expectations before call your application in a test
 $I->createMockRequest('{"id": "elastic-get-entity-1", "httpRequest": {...}, "httpResponse": {...}}')
 $I->createMockRequest('{"id": "elastic-get-entity-2", "httpRequest": {...}, "httpResponse": {...}}')
+$I->createMockRequestFromJsonFile('/root/path/elastic-get-entity-3.json')
 $I->sendGet('/applition/endpoint/1');
 //After execute our application we can check our mocked HTTP communication
 $I->seeMockRequestWasCalled('elastic-get-entity-1');
 $I->seeMockRequestWasNotCalled('elastic-get-entity-2');
 $I->seeAllRequestWereMatched();
+$I->removeMockRequest("elastic-get-entity-2");
+$I->removeAllMockRequest();
 ```
 
 ## Installation
@@ -41,6 +44,8 @@ modules:
         cleanupBefore: 'test'
         ## Optional field, [enabled, disabled] allowed. Default: enabled
         notMatchedRequest: 'enabled' 
+        ## Optional field, path of the expectations folder or file to load before test
+        expectationsPath: '/absolute/expectations/path' 
 ```
 
 ### cleanupBefore
@@ -61,6 +66,10 @@ our expectations, returning a 500 error with a message `Request not matched by M
 
 It allows us to validate all request our application do, are expected and we haven't change our communication with 
 external services.
+
+### expectationsPath
+
+Get the file or files in the path, and send the content to create expectations on mockserver. 
 
 ## About
 
