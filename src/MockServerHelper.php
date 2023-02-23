@@ -58,7 +58,9 @@ class MockServerHelper extends Module
 
         try {
             $this->deactivateNotMatchedRequest();
-        } catch (AssertionFailedError $exception) {}
+        } catch (AssertionFailedError $exception) {
+            return;
+        }
     }
 
     public function _beforeSuite($settings = []): void
@@ -130,7 +132,7 @@ class MockServerHelper extends Module
         $this->mockserver->removeById(self::NOT_MATCHED_REQUEST_ID);
     }
 
-    public function createMockRequestFromJsonFile($expectationFile): void
+    public function createMockRequestFromJsonFile(string $expectationFile): void
     {
         $expectationJson = file_get_contents($expectationFile);
         Assert::assertIsString($expectationJson);

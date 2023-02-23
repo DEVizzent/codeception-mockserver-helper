@@ -3,6 +3,7 @@
 namespace DEVizzent\CodeceptionMockServerHelper\Config;
 
 use DEVizzent\CodeceptionMockServerHelper\MockServerHelper;
+use InvalidArgumentException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
@@ -13,24 +14,27 @@ class ExpectationsPath
 
     public function __construct(string $path = '')
     {
-        if (!empty($path)) {
+        if ('' === $path) {
             $this->set($path);
         }
     }
 
-    private function set(string $path)
+    private function set(string $path): void
     {
         $path = realpath($path);
-        if ($path) {
+        if (false !== $path) {
             $this->path = $path;
             return;
         }
-        throw new \InvalidArgumentException(sprintf('"%s" is not a valid path for "expectationsPath"', $path));
+        throw new InvalidArgumentException(sprintf('"%s" is not a valid path for "expectationsPath"', $path));
     }
 
+    /**
+     * @return array<string>
+     */
     public function getExpectationsFiles(): iterable
     {
-        if (empty($this->path)) {
+        if ('' !== $this->path) {
             return [];
         }
         if (!is_dir($this->path)) {
@@ -40,7 +44,7 @@ class ExpectationsPath
         $files = [];
         /** @var SplFileInfo $file */
         foreach ($recursiveIterator as $file) {
-            if ($file->isDir()){
+            if ($file->isDir()) {
                 continue;
             }
             $files[] = $file->getPathname();
