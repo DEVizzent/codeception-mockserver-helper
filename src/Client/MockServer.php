@@ -62,6 +62,16 @@ class MockServer
             $response->getBody()->getContents()
         );
     }
+    public function removeAllExpectations(): void
+    {
+        $request = new Request('PUT', '/mockserver/clear?type=expectations');
+        $response = $this->mockserverClient->sendRequest($request);
+        Assert::assertEquals(
+            200,
+            $response->getStatusCode(),
+            $response->getBody()->getContents()
+        );
+    }
 
     public function clearLogs(): void
     {

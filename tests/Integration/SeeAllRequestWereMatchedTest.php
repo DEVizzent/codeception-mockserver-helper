@@ -17,11 +17,22 @@ class SeeAllRequestWereMatchedTest extends TestCase
     protected function initialize(string $notMatchedRequest): void
     {
         $moduleContainer = $this->createMock(ModuleContainer::class);
-        $config = ['url' => 'http://mockserver:1080', 'notMatchedRequest' => $notMatchedRequest];
+        $config = [
+            'url' => 'http://mockserver:1080',
+            'notMatchedRequest' => $notMatchedRequest,
+            'expectationsPath' => __DIR__ . '/../../docker/mockserver/expectations',
+        ];
         $this->sot = new MockServerHelper($moduleContainer, $config);
         $this->sot->_initialize();
+        $this->sot->_beforeSuite();
         $this->client = new Client(['proxy' => 'http://mockserver:1080', 'verify' => false]);
         $this->sot->clearMockServerLogs();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->sot->removeAllMockRequest();
     }
 
     public function testAllRequestWereMatchedWhenConfigDisabledThrowException(): void
