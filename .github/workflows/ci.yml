@@ -14,8 +14,6 @@ jobs:
         image: mockserver/mockserver
         ports:
           - "1080:1080"
-        volumes:
-          - /docker/mockserver/expectations:/expectations
         env:
           MOCKSERVER_INITIALIZATION_JSON_PATH: /docker/mockserver/expectations/**.json
           MOCKSERVER_LOG_LEVEL: WARN
