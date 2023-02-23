@@ -17,10 +17,21 @@ class SeeMockRequestWasCalledTest extends TestCase
     {
         parent::setUp();
         $moduleContainer = $this->createMock(ModuleContainer::class);
-        $this->sot = new MockServerHelper($moduleContainer, ['url' => 'http://mockserver:1080']);
+        $config = [
+            'url' => 'http://mockserver:1080',
+            'expectationsPath' => __DIR__ . '/../../docker/mockserver/expectations',
+        ];
+        $this->sot = new MockServerHelper($moduleContainer, $config);
         $this->sot->_initialize();
+        $this->sot->_beforeSuite();
         $this->client = new Client(['proxy' => 'http://mockserver:1080', 'verify' => false]);
         $this->sot->clearMockServerLogs();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->sot->removeAllMockRequest();
     }
 
     public function testExpectationWasCalled(): void

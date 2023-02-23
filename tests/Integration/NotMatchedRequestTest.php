@@ -20,17 +20,22 @@ class NotMatchedRequestTest extends TestCase
         $moduleContainer = $this->createMock(ModuleContainer::class);
         $this->sot = new MockServerHelper(
             $moduleContainer,
-            ['url' => 'http://mockserver:1080', 'notMatchedRequest' => $notMatchedRequestConfig]
+            [
+                'url' => 'http://mockserver:1080',
+                'notMatchedRequest' => $notMatchedRequestConfig,
+                'expectationsPath' => __DIR__ . '/../../docker/mockserver/expectations',
+            ]
         );
         $this->sot->_initialize();
+        $this->sot->_beforeSuite();
         $this->client = new Client(['proxy' => 'http://mockserver:1080', 'verify' => false]);
         $this->sot->clearMockServerLogs();
     }
 
     protected function tearDown(): void
     {
+        $this->sot->removeAllMockRequest();
         parent::tearDown();
-        $this->sot->deactivateNotMatchedRequest();
     }
 
     public function testActivateNotMatchedRequestCreateExpectation()
