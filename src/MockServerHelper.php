@@ -5,6 +5,7 @@ namespace DEVizzent\CodeceptionMockServerHelper;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Module;
 use Codeception\TestInterface;
+use DEVizzent\CodeceptionMockServerHelper\Client\MockServer;
 use DEVizzent\CodeceptionMockServerHelper\Config\CleanUpBefore;
 use DEVizzent\CodeceptionMockServerHelper\Config\NotMatchedRequest;
 use GuzzleHttp\Client;
@@ -18,7 +19,7 @@ class MockServerHelper extends Module
     private const CONFIG_URL = 'url';
     private const CONFIG_CLEANUP_BEFORE = 'cleanupBefore';
     public const NOT_MATCHED_REQUEST_ID = 'not-matched-request';
-    private Client $mockserverClient;
+    private MockServer $mockserver;
     private CleanUpBefore $cleanUpBefore;
     private NotMatchedRequest $notMatchedRequest;
     /** @param array<string, string>|null $config */
@@ -40,23 +41,24 @@ class MockServerHelper extends Module
         if (is_string($this->config[self::CONFIG_CLEANUP_BEFORE] ?? null)) {
             $this->cleanUpBefore = new CleanUpBefore($this->config[self::CONFIG_CLEANUP_BEFORE]);
         }
-        $this->mockserverClient = new Client([
+        $this->mockserver = new MockServer(new Client([
             'base_uri'  => $this->config[self::CONFIG_URL]
-        ]);
+        ]));
         if ($this->notMatchedRequest->isEnabled()) {
             $expectationJson = file_get_contents(__DIR__ . '/not-matched-request.json');
             Assert::assertIsString($expectationJson);
             $this->createMockRequest($expectationJson);
-        } else {
-            $this->deactivateNotMatchedRequest();
+            return;
         }
+
+        $this->deactivateNotMatchedRequest();
     }
 
     public function _beforeSuite($settings = []): void
     {
         parent::_beforeSuite($settings);
         if ($this->cleanUpBefore->isSuite()) {
-            $this->clearMockServerLogs();
+            $this->mockserver->clearLogs();
         }
     }
 
@@ -64,29 +66,18 @@ class MockServerHelper extends Module
     {
         parent::_before($test);
         if ($this->cleanUpBefore->isTest()) {
-            $this->clearMockServerLogs();
+            $this->mockserver->clearLogs();
         }
     }
 
     public function seeMockRequestWasCalled(string $expectationId, ?int $times = null): void
     {
-        $body = json_encode([
-            'expectationId' => ['id' => $expectationId],
-            'times' => ['atLeast' => $times ?? 1, 'atMost' => $times ?? 1000]
-        ]);
-        Assert::assertNotFalse($body);
-        $request = new Request('PUT', '/mockserver/verify', [], $body);
-        $response = $this->mockserverClient->sendRequest($request);
-        Assert::assertEquals(
-            202,
-            $response->getStatusCode(),
-            $response->getBody()->getContents()
-        );
+        $this->mockserver->verify($expectationId, $times);
     }
 
     public function seeMockRequestWasNotCalled(string $expectationId): void
     {
-        $this->seeMockRequestWasCalled($expectationId, 0);
+        $this->mockserver->verify($expectationId, 0);
     }
 
     public function seeAllRequestWereMatched(): void
@@ -97,7 +88,7 @@ class MockServerHelper extends Module
             );
         }
         try {
-            $this->seeMockRequestWasCalled(self::NOT_MATCHED_REQUEST_ID, 0);
+            $this->mockserver->verify(self::NOT_MATCHED_REQUEST_ID, 0);
         } catch (ExpectationFailedException $exception) {
             $message = 'REQUEST NOT MATCHED' . strstr($exception->getMessage(), ' was:');
             throw new ExpectationFailedException($message);
@@ -106,48 +97,21 @@ class MockServerHelper extends Module
 
     public function createMockRequest(string $json): void
     {
-        $request = new Request(
-            'PUT',
-            '/mockserver/expectation',
-            ['Content-Type' => 'application/json'],
-            $json
-        );
-        $response = $this->mockserverClient->sendRequest($request);
-        Assert::assertEquals(
-            201,
-            $response->getStatusCode(),
-            $response->getBody()->getContents()
-        );
+        $this->mockserver->create($json);
     }
 
     public function removeMockRequest(string $mockRequestId): void
     {
-        $body = json_encode([
-            'id' => $mockRequestId
-        ]);
-        Assert::assertIsString($body);
-        $request = new Request('PUT', '/mockserver/clear?type=expectations', [], $body);
-        $response = $this->mockserverClient->sendRequest($request);
-        Assert::assertEquals(
-            200,
-            $response->getStatusCode(),
-            $response->getBody()->getContents()
-        );
+        $this->mockserver->removeById($mockRequestId);
     }
 
     public function clearMockServerLogs(): void
     {
-        $request = new Request('PUT', '/mockserver/clear?type=log');
-        $response = $this->mockserverClient->sendRequest($request);
-        Assert::assertEquals(
-            200,
-            $response->getStatusCode(),
-            $response->getBody()->getContents()
-        );
+        $this->mockserver->clearLogs();
     }
 
     public function deactivateNotMatchedRequest(): void
     {
-        $this->removeMockRequest(self::NOT_MATCHED_REQUEST_ID);
+        $this->mockserver->removeById(self::NOT_MATCHED_REQUEST_ID);
     }
 }
