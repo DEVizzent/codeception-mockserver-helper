@@ -12,9 +12,6 @@ services:
     container_name: mockserver
     image: mockserver/mockserver
     environment:
-      MOCKSERVER_INITIALIZATION_JSON_PATH: /expectations/**.json
       MOCKSERVER_LOG_LEVEL: ${MOCKSERVER_LOG_LEVEL}
     ports:
       - "1080:1080"
-    volumes:
-      - ./docker/mockserver/expectations:/expectations
