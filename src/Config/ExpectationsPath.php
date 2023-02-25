@@ -14,7 +14,7 @@ class ExpectationsPath
 
     public function __construct(string $path = '')
     {
-        if ('' === $path) {
+        if ('' !== $path) {
             $this->set($path);
         }
     }
@@ -34,7 +34,7 @@ class ExpectationsPath
      */
     public function getExpectationsFiles(): iterable
     {
-        if ('' !== $this->path) {
+        if ('' === $this->path) {
             return [];
         }
         if (!is_dir($this->path)) {

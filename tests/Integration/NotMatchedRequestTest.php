@@ -21,14 +21,14 @@ class NotMatchedRequestTest extends TestCase
         $this->sot = new MockServerHelper(
             $moduleContainer,
             [
-                'url' => 'http://mockserver:1080',
+                'url' => getenv('MOCKSERVER_URL'),
                 'notMatchedRequest' => $notMatchedRequestConfig,
                 'expectationsPath' => __DIR__ . '/../../docker/mockserver/expectations',
             ]
         );
         $this->sot->_initialize();
         $this->sot->_beforeSuite();
-        $this->client = new Client(['proxy' => 'http://mockserver:1080', 'verify' => false]);
+        $this->client = new Client(['proxy' => getenv('MOCKSERVER_URL'), 'verify' => false]);
         $this->sot->clearMockServerLogs();
     }
 

@@ -5,6 +5,8 @@ services:
     build:
       dockerfile: docker/php/Dockerfile
       context: .
+    environment:
+      MOCKSERVER_URL: 'http://mockserver:1080'
     volumes:
       - .:/app
     tty: true
