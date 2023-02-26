@@ -3,10 +3,13 @@ services:
   php:
     container_name: php
     build:
-      dockerfile: docker/php/Dockerfile
-      context: .
+      context: docker/php/
     environment:
       MOCKSERVER_URL: 'http://mockserver:1080'
+      PHP_IDE_CONFIG: 'serverName=host.docker.internal'
+      XDEBUG_TRIGGER: 1
+    extra_hosts:
+      host.docker.internal: host-gateway
     volumes:
       - .:/app
     tty: true
