@@ -2,6 +2,7 @@
 
 namespace DEVizzent\CodeceptionMockServerHelper\Client;
 
+use DEVizzent\CodeceptionMockServerHelper\MockServerHelper;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\Assert;
@@ -32,6 +33,21 @@ class MockServer
             $response->getStatusCode(),
             $response->getBody()->getContents()
         );
+    }
+
+    public function getNotMatchedRequests(): array
+    {
+        $notMatchedRequests = [];
+        $request = new Request('PUT', '/mockserver/retrieve?format=json&type=request_responses');
+        $response = $this->mockserverClient->sendRequest($request);
+        $requestResponses = json_decode($response->getBody()->getContents(), true);
+        foreach ($requestResponses as $requestResponse) {
+            $message = $requestResponse['httpResponse']['body']['message'] ?? '';
+            if ($message === 'Request not matched by MockServer') {
+                $notMatchedRequests[] = $requestResponse['httpRequest'];
+            }
+        }
+        return $notMatchedRequests;
     }
     public function create(string $json): void
     {

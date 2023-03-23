@@ -10,6 +10,7 @@ use DEVizzent\CodeceptionMockServerHelper\Config\CleanUpBefore;
 use DEVizzent\CodeceptionMockServerHelper\Config\ExpectationsPath;
 use DEVizzent\CodeceptionMockServerHelper\Config\NotMatchedRequest;
 use GuzzleHttp\Client;
+use Jfcherng\Diff\DiffHelper;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -25,6 +26,7 @@ class MockServerHelper extends Module
     private CleanUpBefore $cleanUpBefore;
     private NotMatchedRequest $notMatchedRequest;
     private ExpectationsPath $expectationPath;
+
     /** @param array<string, string>|null $config */
     public function __construct(ModuleContainer $moduleContainer, ?array $config = null)
     {
@@ -49,7 +51,7 @@ class MockServerHelper extends Module
             $this->expectationPath = new ExpectationsPath($this->config[self::CONFIG_EXPECTATIONS_PATH]);
         }
         $this->mockserver = new MockServer(new Client([
-            'base_uri'  => $this->config[self::CONFIG_URL]
+            'base_uri' => $this->config[self::CONFIG_URL]
         ]));
         if ($this->notMatchedRequest->isEnabled()) {
             $this->createMockRequestFromJsonFile(__DIR__ . '/not-matched-request.json');
@@ -84,7 +86,29 @@ class MockServerHelper extends Module
 
     public function seeMockRequestWasCalled(string $expectationId, ?int $times = null): void
     {
-        $this->mockserver->verify($expectationId, $times);
+        try {
+            $this->mockserver->verify($expectationId, $times);
+        } catch (AssertionFailedError $exception) {
+            //throw $exception;
+            preg_match('#(.|\n)* expected:<(?<expected>\{(.|\n)*\})> but was:<(.|\n)*>#', $exception->getMessage(), $matches);
+            if (empty($matches)) {
+                throw $exception;
+            }
+            $expected = json_decode($matches['expected'], true);
+            $notMatchedRequests = $this->mockserver->getNotMatchedRequests();
+            $currentSimilityRatio = 0;
+            $expectedFormatted = $this->formatMockServerRequest($expected);
+            foreach ($notMatchedRequests as $notMatchedRequest) {
+                $diff = DiffHelper::calculate($expectedFormatted, $this->formatMockServerRequest($notMatchedRequest));
+                $statistics = DiffHelper::getStatistics();
+                $similityRatio = $statistics['unmodified'] - $statistics['inserted'] - $statistics['deleted'];
+                if ($currentSimilityRatio < $similityRatio) {
+                    $currentSimilityRatio = $similityRatio;
+                    $bestDiff = $diff;
+                }
+            }
+            throw new AssertionFailedError('Impossible match request: '. PHP_EOL . $bestDiff);
+        }
     }
 
     public function seeMockRequestWasNotCalled(string $expectationId): void
@@ -137,5 +161,11 @@ class MockServerHelper extends Module
         $expectationJson = file_get_contents($expectationFile);
         Assert::assertIsString($expectationJson);
         $this->createMockRequest($expectationJson);
+    }
+
+    public function formatMockServerRequest(array $mockServerRequest): string
+    {
+        ksort($mockServerRequest);
+        return json_encode($mockServerRequest, JSON_PRETTY_PRINT);
     }
 }
