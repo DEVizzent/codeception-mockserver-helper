@@ -60,10 +60,14 @@ class SeeMockRequestWasCalledTest extends TestCase
 
     public function testExpectationWasCalledButWasNotWithGoodRecomendation(): void
     {
-        $this->client->request('GET', 'https://jsonplaceholder.typicode.com/posts/2', ['http_errors'=>false]);
-        $this->client->request('GET', 'https://jsonplaceholder.typicode.com/posts/2', ['http_errors'=>false]);
-        $this->client->request('GET', 'https://jsonplaceholder.typicode.com/posts/5', ['http_errors'=>false, 'headers' => ['randomHeader' => 'value']]);
-        $this->client->request('GET', 'https://jsonplaceholder.typicode.com/users/3/albums', ['http_errors'=>false]);
+        $this->client->request('GET', 'https://jsonplaceholder.typicode.com/posts/2', ['http_errors' => false]);
+        $this->client->request('GET', 'https://jsonplaceholder.typicode.com/posts/2', ['http_errors' => false]);
+        $this->client->request(
+            'GET',
+            'https://jsonplaceholder.typicode.com/posts/5',
+            ['http_errors' => false, 'headers' => ['randomHeader' => 'value']]
+        );
+        $this->client->request('GET', 'https://jsonplaceholder.typicode.com/users/3/albums', ['http_errors' => false]);
 
         $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessageMatches('#.*"path": "\\\/users\\\/3\\\/albums".*#');
@@ -72,10 +76,14 @@ class SeeMockRequestWasCalledTest extends TestCase
 
     public function testExpectationWasCalledButWasNotWithGoodRecomendation2(): void
     {
-        $this->client->request('GET', 'https://jsonplaceholder.typicode.com/posts/2', ['http_errors'=>false]);
-        $this->client->request('GET', 'https://jsonplaceholder.typicode.com/posts/2', ['http_errors'=>false]);
-        $this->client->request('GET', 'https://jsonplaceholder.typicode.com/posts/5', ['http_errors'=>false]);
-        $this->client->request('GET', 'https://jsonplaceholder.typicode.com/users/3/albums', ['http_errors'=>false, 'headers' => ['randomHeader' => 'value']]);
+        $this->client->request('GET', 'https://jsonplaceholder.typicode.com/posts/2', ['http_errors' => false]);
+        $this->client->request('GET', 'https://jsonplaceholder.typicode.com/posts/2', ['http_errors' => false]);
+        $this->client->request('GET', 'https://jsonplaceholder.typicode.com/posts/5', ['http_errors' => false]);
+        $this->client->request(
+            'GET',
+            'https://jsonplaceholder.typicode.com/users/3/albums',
+            ['http_errors' => false, 'headers' => ['randomHeader' => 'value']]
+        );
 
         $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessageMatches('#.*"path": "\\\/posts\\\/5".*#');

@@ -35,6 +35,18 @@ class MockServer
         );
     }
 
+    /**
+     * @return array<int, array{
+     *     method: string,
+     *     path: string,
+     *     headers:array<string, string>,
+     *     keepAlive: bool,
+     *     secure: bool,
+     *     protocol: string,
+     *     body?: string
+     * }>
+     * @throws \Psr\Http\Client\ClientExceptionInterface
+     */
     public function getNotMatchedRequests(): array
     {
         $notMatchedRequests = [];
@@ -49,6 +61,7 @@ class MockServer
         }
         return $notMatchedRequests;
     }
+
     public function create(string $json): void
     {
         $request = new Request(
@@ -64,6 +77,7 @@ class MockServer
             $response->getBody()->getContents()
         );
     }
+
     public function removeById(string $mockRequestId): void
     {
         $body = json_encode([
@@ -78,6 +92,7 @@ class MockServer
             $response->getBody()->getContents()
         );
     }
+
     public function removeAllExpectations(): void
     {
         $request = new Request('PUT', '/mockserver/clear?type=expectations');

@@ -91,12 +91,13 @@ class MockServerHelper extends Module
         } catch (AssertionFailedError $exception) {
             //throw $exception;
             preg_match('#(.|\n)* expected:<(?<expected>\{(.|\n)*\})> but was:<(.|\n)*>#', $exception->getMessage(), $matches);
-            if (empty($matches)) {
+            if (!isset($matches['expected'])) {
                 throw $exception;
             }
             $expected = json_decode($matches['expected'], true);
             $notMatchedRequests = $this->mockserver->getNotMatchedRequests();
             $currentSimilityRatio = 0;
+            $bestDiff = '';
             $expectedFormatted = $this->formatMockServerRequest($expected);
             foreach ($notMatchedRequests as $notMatchedRequest) {
                 $diff = DiffHelper::calculate($expectedFormatted, $this->formatMockServerRequest($notMatchedRequest));
@@ -107,7 +108,7 @@ class MockServerHelper extends Module
                     $bestDiff = $diff;
                 }
             }
-            throw new AssertionFailedError('Impossible match request: '. PHP_EOL . $bestDiff);
+            throw new AssertionFailedError('Impossible match request: ' . PHP_EOL . $bestDiff);
         }
     }
 
@@ -163,9 +164,11 @@ class MockServerHelper extends Module
         $this->createMockRequest($expectationJson);
     }
 
+    /** @param array<string, mixed> $mockServerRequest */
     public function formatMockServerRequest(array $mockServerRequest): string
     {
         ksort($mockServerRequest);
-        return json_encode($mockServerRequest, JSON_PRETTY_PRINT);
+        $requestFormatted = json_encode($mockServerRequest, JSON_PRETTY_PRINT);
+        return is_string($requestFormatted) ? $requestFormatted : '';
     }
 }
