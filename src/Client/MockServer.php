@@ -2,6 +2,7 @@
 
 namespace DEVizzent\CodeceptionMockServerHelper\Client;
 
+use DEVizzent\CodeceptionMockServerHelper\MockServerHelper;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\Assert;
@@ -33,6 +34,34 @@ class MockServer
             $response->getBody()->getContents()
         );
     }
+
+    /**
+     * @return array<int, array{
+     *     method: string,
+     *     path: string,
+     *     headers:array<string, string>,
+     *     keepAlive: bool,
+     *     secure: bool,
+     *     protocol: string,
+     *     body?: string
+     * }>
+     * @throws \Psr\Http\Client\ClientExceptionInterface
+     */
+    public function getNotMatchedRequests(): array
+    {
+        $notMatchedRequests = [];
+        $request = new Request('PUT', '/mockserver/retrieve?format=json&type=request_responses');
+        $response = $this->mockserverClient->sendRequest($request);
+        $requestResponses = json_decode($response->getBody()->getContents(), true);
+        foreach ($requestResponses as $requestResponse) {
+            $message = $requestResponse['httpResponse']['body']['message'] ?? '';
+            if ($message === 'Request not matched by MockServer') {
+                $notMatchedRequests[] = $requestResponse['httpRequest'];
+            }
+        }
+        return $notMatchedRequests;
+    }
+
     public function create(string $json): void
     {
         $request = new Request(
@@ -48,6 +77,7 @@ class MockServer
             $response->getBody()->getContents()
         );
     }
+
     public function removeById(string $mockRequestId): void
     {
         $body = json_encode([
@@ -62,6 +92,7 @@ class MockServer
             $response->getBody()->getContents()
         );
     }
+
     public function removeAllExpectations(): void
     {
         $request = new Request('PUT', '/mockserver/clear?type=expectations');
