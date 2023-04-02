@@ -23,7 +23,7 @@ down:  ## Stop application containers and required services
 	@docker-compose down
 
 test:  ## Execute all phpunit test
-	@docker-compose exec ${PHP_CONTAINER_NAME} ./vendor/bin/phpunit
+	@docker-compose exec ${PHP_CONTAINER_NAME} ./vendor/bin/phpunit ${TEST}
 
 code-sniff cs:  ## Detect coding standard violations in all project files using code sniffer
 	@docker-compose exec ${PHP_CONTAINER_NAME} ./vendor/bin/phpcs
