@@ -90,20 +90,19 @@ class MockServerHelper extends Module
             $this->mockserver->verify($expectationId, $times);
         } catch (AssertionFailedError $exception) {
             //throw $exception;
-            preg_match('#(.|\n)* expected:<(?<expected>\{(.|\n)*\})> but was:<(.|\n)*>#', $exception->getMessage(), $matches);
+            preg_match('#.* expected:<(?<expected>\{.*\})> but was:<.*>#s', $exception->getMessage(), $matches);
             if (!isset($matches['expected'])) {
                 throw $exception;
             }
             $expected = json_decode($matches['expected'], true);
             $notMatchedRequests = $this->mockserver->getNotMatchedRequests();
-            $currentSimilityRatio = 0;
             $bestDiff = '';
             $expectedFormatted = $this->formatMockServerRequest($expected);
             foreach ($notMatchedRequests as $notMatchedRequest) {
                 $diff = DiffHelper::calculate($expectedFormatted, $this->formatMockServerRequest($notMatchedRequest));
                 $statistics = DiffHelper::getStatistics();
                 $similityRatio = $statistics['unmodified'] - $statistics['inserted'] - $statistics['deleted'];
-                if ($currentSimilityRatio < $similityRatio) {
+                if (!isset($currentSimilityRatio) || $currentSimilityRatio < $similityRatio) {
                     $currentSimilityRatio = $similityRatio;
                     $bestDiff = $diff;
                 }
