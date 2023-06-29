@@ -2,7 +2,6 @@
 
 namespace DEVizzent\CodeceptionMockServerHelper\Client;
 
-use DEVizzent\CodeceptionMockServerHelper\MockServerHelper;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\Assert;
