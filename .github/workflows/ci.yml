@@ -38,6 +38,14 @@ jobs:
             composer-options: "--ignore-platform-reqs"
             experimental: true
             dependencies: "highest"
+          - php: "8.3"
+            composer-options: "--ignore-platform-reqs"
+            experimental: true
+            dependencies: "highest"
+          - php: "8.4"
+            composer-options: "--ignore-platform-reqs"
+            experimental: true
+            dependencies: "highest"
     steps:
       - name: Set up PHP
         uses: shivammathur/setup-php@2.24.0
