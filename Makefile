@@ -38,10 +38,10 @@ code-find-smells md:  ## Run static analysis tool to find code smells using mess
 	@docker compose exec ${PHP_CONTAINER_NAME} ./vendor/bin/phpmd src,tests text phpmd.xml --suffixes php
 
 composer-update:  ## Run composer update
-	@docker run --rm --interactive --tty --volume $PWD:/app composer update
+	@docker run --rm --interactive --tty --volume $$PWD:/app composer update
 
 composer-install:  ## Run composer update
-	@docker run --rm --interactive --tty --volume $PWD:/app composer install
+	@docker run --rm --interactive --tty --volume $$PWD:/app composer install
 
 console c: ## Run the container bash console
 	docker exec -it php /bin/bash
