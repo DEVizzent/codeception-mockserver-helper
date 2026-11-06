@@ -16,7 +16,7 @@ class SeeAllRequestWereMatchedTest extends TestCase
 
     protected function initialize(string $notMatchedRequest): void
     {
-        $moduleContainer = $this->createMock(ModuleContainer::class);
+        $moduleContainer = $this->createStub(ModuleContainer::class);
         $config = [
             'url' => getenv('MOCKSERVER_URL'),
             'notMatchedRequest' => $notMatchedRequest,

@@ -17,7 +17,7 @@ class NotMatchedRequestTest extends TestCase
 
     private function initialize(string $notMatchedRequestConfig): void
     {
-        $moduleContainer = $this->createMock(ModuleContainer::class);
+        $moduleContainer = $this->createStub(ModuleContainer::class);
         $this->sot = new MockServerHelper(
             $moduleContainer,
             [
