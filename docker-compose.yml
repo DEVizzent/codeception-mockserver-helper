@@ -15,7 +15,7 @@ services:
     tty: true
   mockserver:
     container_name: mockserver
-    image: mockserver/mockserver
+    image: mockserver/mockserver:9.2.0
     environment:
       MOCKSERVER_LOG_LEVEL: ${MOCKSERVER_LOG_LEVEL}
     ports:
