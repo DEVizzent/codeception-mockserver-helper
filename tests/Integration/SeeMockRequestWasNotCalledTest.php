@@ -43,7 +43,8 @@ class SeeMockRequestWasNotCalledTest extends TestCase
     {
         $this->expectException(ExpectationFailedException::class);
         $this->expectExceptionMessageMatches(
-            '#^Request not found exactly 0 times, expected:((.|\n)*) but was:((.|\n)*)'
+            '#^Request (?:not found exactly 0 times|found 1 time but should have been found exactly 0 times), '
+            . 'expected:((.|\n)*) but was:((.|\n)*)'
             . 'Failed asserting that 406 matches expected 202\.$#'
         );
         $this->client->request('GET', 'https://jsonplaceholder.typicode.com/posts/2');
