@@ -54,8 +54,7 @@ class SeeMockRequestWasNotCalledTest extends TestCase
     {
         $this->expectException(ExpectationFailedException::class);
         $this->expectExceptionMessage(
-            'No expectation found with id not-existing-expectation' . "
-"
+            'No expectation found with id not-existing-expectation' . "\n"
             . 'Failed asserting that 400 matches expected 202.'
         );
         $this->sot->seeMockRequestWasNotCalled('not-existing-expectation');
