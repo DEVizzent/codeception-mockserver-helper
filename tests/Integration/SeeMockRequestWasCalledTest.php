@@ -17,7 +17,7 @@ class SeeMockRequestWasCalledTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $moduleContainer = $this->createMock(ModuleContainer::class);
+        $moduleContainer = $this->createStub(ModuleContainer::class);
         $config = [
             'url' => getenv('MOCKSERVER_URL'),
             'expectationsPath' => __DIR__ . '/../../docker/mockserver/expectations',
@@ -52,7 +52,8 @@ class SeeMockRequestWasCalledTest extends TestCase
     {
         $this->expectException(ExpectationFailedException::class);
         $this->expectExceptionMessage(
-            'No expectation found with id not-existing-expectation' . PHP_EOL
+            'No expectation found with id not-existing-expectation' . "
+"
             . 'Failed asserting that 400 matches expected 202.'
         );
         $this->sot->seeMockRequestWasCalled('not-existing-expectation');
