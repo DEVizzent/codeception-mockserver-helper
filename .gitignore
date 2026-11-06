@@ -3,3 +3,4 @@ vendor
 composer.lock
 .phpcs-cache
 .env
+var

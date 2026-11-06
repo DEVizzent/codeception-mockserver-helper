@@ -75,7 +75,7 @@ Get the file or files in the path, and send the content to create expectations o
 
 ### Requirements
 
-Codecetion-MockServer Helper needs at least php 7.4 or higher and codeception 4 or higher.
+Codecetion-MockServer Helper needs PHP 8.2 or higher, Codeception 5 and PHPUnit 11 or higher.
 
 ### How to contribute
 
