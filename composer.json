@@ -29,7 +29,7 @@
     "jfcherng/php-diff": "^6.14"
   },
   "require-dev": {
-    "phpmd/phpmd": "2.*",
+    "phpmd/phpmd": "2.* || 3.*",
     "phpstan/phpstan": "1.*",
     "phpstan/phpstan-deprecation-rules": "^1.0",
     "phpstan/phpstan-strict-rules": "^1.4",
