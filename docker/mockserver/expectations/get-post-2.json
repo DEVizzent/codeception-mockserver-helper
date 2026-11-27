@@ -7,9 +7,6 @@
       "content-length": [
         "0"
       ],
-      "User-Agent": [
-        "GuzzleHttp/7"
-      ],
       "Host": [
         "jsonplaceholder.typicode.com"
       ]
